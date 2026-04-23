@@ -7,6 +7,7 @@ function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [filterProfesion, setFilterProfesion] = useState('');
   const [filterRegion, setFilterRegion] = useState('');
   const [sortBy, setSortBy] = useState('rankNacional'); // rankNacional | rankRegional | nota
@@ -97,6 +98,14 @@ function App() {
       });
   }, []);
 
+  // Debounce search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [query]);
+
   // Fuse index for text search (only used when query is not empty)
   const fuse = useMemo(() => {
     return new Fuse(data, {
@@ -113,8 +122,8 @@ function App() {
     let pool;
 
     // Step 1: Text search or full dataset
-    if (query.trim()) {
-      pool = fuse.search(query).map(r => r.item);
+    if (debouncedQuery.trim()) {
+      pool = fuse.search(debouncedQuery).map(r => r.item);
     } else {
       pool = [...data];
     }
@@ -136,12 +145,12 @@ function App() {
     });
 
     return pool;
-  }, [query, fuse, data, filterProfesion, filterRegion, sortBy]);
+  }, [debouncedQuery, fuse, data, filterProfesion, filterRegion, sortBy]);
 
   // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(30);
-  }, [query, filterProfesion, filterRegion, sortBy]);
+  }, [debouncedQuery, filterProfesion, filterRegion, sortBy]);
 
   const visibleResults = results.slice(0, visibleCount);
 
