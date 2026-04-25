@@ -430,6 +430,29 @@ h1 {
   }
 }
 
+/* ── Footer ── */
+.app-footer {
+  text-align: center;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.app-footer a {
+  color: #a5b4fc;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.app-footer a:hover {
+  color: #c7d2fe;
+  text-decoration: underline;
+}
+
 /* =========================================
    Modal Disclaimer Legal
    ========================================= */

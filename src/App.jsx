@@ -322,6 +322,14 @@ function App() {
         </>
       )}
 
+      {/* Footer Permanente */}
+      <footer className="app-footer">
+        <p>
+          Herramienta independiente de búsqueda. <br />
+          Fuente oficial de datos: <a href="https://www.gob.pe/institucion/minsa/informes-publicaciones/8050557-resultados-de-la-evaluacion-para-el-serums-2026-i" target="_blank" rel="noopener noreferrer">Ministerio de Salud (MINSA) - Resultados SERUMS 2026-I</a>
+        </p>
+      </footer>
+
       {showDisclaimer && (
         <div className="modal-overlay">
           <div className="modal-content">
