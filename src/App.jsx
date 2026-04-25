@@ -1,7 +1,65 @@
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import { Search, Users, MapPin, Stethoscope, Target, Globe, ChevronDown } from 'lucide-react';
 import './index.css';
+
+const ResultCard = React.memo(({ row }) => {
+  return (
+    <div className="result-card">
+      <div className="card-header">
+        <div>
+          <h3 className="card-name">{row.nombre}</h3>
+          <p className="card-prof"><Stethoscope size={14} /> {row.profesion}</p>
+          {row.badge && (
+            <div className="top-badge">
+              {row.badge} Nacional
+            </div>
+          )}
+        </div>
+        <div className="score-display">
+          <span className="score-value">{row.nota}</span>
+        </div>
+      </div>
+
+      <div className="card-divider"></div>
+
+      <div className="rankings">
+        <div className="rank-item rank-item-highlight">
+          <span className="rank-label">Promedio Nacional ({row.profesion}):</span>
+          <span className="rank-value rank-value-highlight">{row.promedioNacional}</span>
+        </div>
+        <div className="rank-item">
+          <span className="rank-label"><Globe size={16} /> Puesto Nacional</span>
+          <span className="rank-value">#{row.rankNacional} <span>/ {row.totalNacional}</span></span>
+        </div>
+        <div className="rank-item">
+          <span className="rank-label"><Target size={16} /> Puesto en {row.region}</span>
+          <span className="rank-value">#{row.rankRegional} <span>/ {row.totalRegional}</span></span>
+        </div>
+        <div className="rank-item">
+          <span className="rank-label"><Users size={16} /> Superaste a</span>
+          <span className="rank-value">{row.superados.toLocaleString()} <span>postulantes</span></span>
+        </div>
+      </div>
+
+      {row.nearMiss && (
+        <div className="near-miss-alert">
+          {row.nearMiss}
+        </div>
+      )}
+
+      <button
+        className="share-btn"
+        onClick={() => {
+          const text = `¡Acabo de revisar mi puntaje SERUMS 2026-I!\nSoy el Puesto ${row.rankNacional} de ${row.totalNacional} a Nivel Nacional en ${row.profesion} con ${row.nota} puntos.\n¡Revisa tu ranking también!`;
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`);
+        }}
+      >
+        📲 Compartir mi Ranking
+      </button>
+    </div>
+  );
+});
 
 function App() {
   const [data, setData] = useState([]);
@@ -236,59 +294,7 @@ function App() {
           <div className="results-grid">
             {visibleResults.length > 0 ? (
               visibleResults.map((row, index) => (
-                <div className="result-card" key={index}>
-                  <div className="card-header">
-                    <div>
-                      <h3 className="card-name">{row.nombre}</h3>
-                      <p className="card-prof"><Stethoscope size={14} /> {row.profesion}</p>
-                      {row.badge && (
-                        <div className="top-badge">
-                          {row.badge} Nacional
-                        </div>
-                      )}
-                    </div>
-                    <div className="score-display">
-                      <span className="score-value">{row.nota}</span>
-                    </div>
-                  </div>
-
-                  <div className="card-divider"></div>
-
-                  <div className="rankings">
-                    <div className="rank-item rank-item-highlight">
-                      <span className="rank-label">Promedio Nacional ({row.profesion}):</span>
-                      <span className="rank-value rank-value-highlight">{row.promedioNacional}</span>
-                    </div>
-                    <div className="rank-item">
-                      <span className="rank-label"><Globe size={16} /> Puesto Nacional</span>
-                      <span className="rank-value">#{row.rankNacional} <span>/ {row.totalNacional}</span></span>
-                    </div>
-                    <div className="rank-item">
-                      <span className="rank-label"><Target size={16} /> Puesto en {row.region}</span>
-                      <span className="rank-value">#{row.rankRegional} <span>/ {row.totalRegional}</span></span>
-                    </div>
-                    <div className="rank-item">
-                      <span className="rank-label"><Users size={16} /> Superaste a</span>
-                      <span className="rank-value">{row.superados.toLocaleString()} <span>postulantes</span></span>
-                    </div>
-                  </div>
-
-                  {row.nearMiss && (
-                    <div className="near-miss-alert">
-                      {row.nearMiss}
-                    </div>
-                  )}
-
-                  <button
-                    className="share-btn"
-                    onClick={() => {
-                      const text = `¡Acabo de revisar mi puntaje SERUMS 2026-I!\nSoy el Puesto ${row.rankNacional} de ${row.totalNacional} a Nivel Nacional en ${row.profesion} con ${row.nota} puntos.\n¡Revisa tu ranking también!`;
-                      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`);
-                    }}
-                  >
-                    📲 Compartir mi Ranking
-                  </button>
-                </div>
+                <ResultCard key={index} row={row} />
               ))
             ) : (
               <div style={{ textAlign: 'center', padding: '3rem', width: '100%', gridColumn: '1 / -1', color: 'var(--text-muted)' }}>
