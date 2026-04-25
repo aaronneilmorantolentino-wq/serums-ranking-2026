@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import { Search, Users, MapPin, Stethoscope, Target, Globe, ChevronDown, AlertTriangle, ExternalLink } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import './index.css';
 
 const ResultCard = React.memo(({ row }) => {
@@ -368,6 +369,7 @@ function App() {
         </div>
       )}
       <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
