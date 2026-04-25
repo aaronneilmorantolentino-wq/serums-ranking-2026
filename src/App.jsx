@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Fuse from 'fuse.js';
-import { Search, Users, MapPin, Stethoscope, Target, Globe, ChevronDown } from 'lucide-react';
+import { Search, Users, MapPin, Stethoscope, Target, Globe, ChevronDown, AlertTriangle, ExternalLink } from 'lucide-react';
 import './index.css';
 
 const ResultCard = React.memo(({ row }) => {
@@ -70,6 +70,14 @@ function App() {
   const [filterRegion, setFilterRegion] = useState('');
   const [sortBy, setSortBy] = useState('rankNacional'); // rankNacional | rankRegional | nota
   const [visibleCount, setVisibleCount] = useState(30);
+  const [showDisclaimer, setShowDisclaimer] = useState(() => {
+    return localStorage.getItem('serums_disclaimer_accepted') !== 'true';
+  });
+
+  const handleAcceptDisclaimer = () => {
+    localStorage.setItem('serums_disclaimer_accepted', 'true');
+    setShowDisclaimer(false);
+  };
 
   // Extract unique professions and regions for dropdown filters
   const profesiones = useMemo(() => [...new Set(data.map(d => d.profesion))].sort(), [data]);
@@ -312,6 +320,43 @@ function App() {
             </button>
           )}
         </>
+      )}
+
+      {showDisclaimer && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-title">
+              <AlertTriangle className="modal-title-icon" size={28} />
+              Aviso Legal Importante
+            </div>
+            
+            <p className="modal-text">
+              Esta plataforma web es una herramienta de código abierto desarrollada <strong>exclusivamente con fines de testeo, prueba y visualización de datos</strong>. No tiene ninguna afiliación, patrocinio ni vínculo oficial con el Ministerio de Salud (MINSA).
+            </p>
+            
+            <p className="modal-text">
+              Los datos mostrados han sido extraídos de forma automatizada y podrían contener márgenes de error. Esta herramienta <strong>no tiene validez legal</strong> para reclamos, adjudicación de plazas, ni procesos administrativos.
+            </p>
+
+            <div className="modal-link-box">
+              <p className="modal-text" style={{ marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                Para información oficial y trámites, consulte obligatoriamente el documento del MINSA:
+              </p>
+              <a 
+                href="https://www.gob.pe/institucion/minsa/informes-publicaciones/8050557-resultados-de-la-evaluacion-para-el-serums-2026-i" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="modal-link"
+              >
+                Ver Resultados Oficiales en Gob.pe <ExternalLink size={16} />
+              </a>
+            </div>
+
+            <button className="modal-btn" onClick={handleAcceptDisclaimer}>
+              Entiendo y Acepto las Condiciones
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
