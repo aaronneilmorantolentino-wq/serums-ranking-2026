@@ -167,6 +167,7 @@ function App() {
             type="text"
             className="search-input"
             placeholder="Buscar por apellidos y nombres..."
+            aria-label="Buscar postulante"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
@@ -179,6 +180,7 @@ function App() {
             <Stethoscope size={16} className="select-icon" />
             <select
               className="filter-select"
+              aria-label="Filtrar por profesión"
               value={filterProfesion}
               onChange={(e) => setFilterProfesion(e.target.value)}
             >
@@ -192,6 +194,7 @@ function App() {
             <MapPin size={16} className="select-icon" />
             <select
               className="filter-select"
+              aria-label="Filtrar por región"
               value={filterRegion}
               onChange={(e) => setFilterRegion(e.target.value)}
             >
@@ -205,6 +208,7 @@ function App() {
             <Target size={16} className="select-icon" />
             <select
               className="filter-select"
+              aria-label="Criterio de ordenamiento"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
